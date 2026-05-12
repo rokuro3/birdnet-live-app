@@ -12,13 +12,13 @@ The same codebase can target Android, iOS, and desktop platforms.
 
 ### The files that matter most at the start
 
-- `/home/runner/work/birdnet-live-app/birdnet-live-app/pubspec.yaml`:
+- `pubspec.yaml`:
   package metadata, dependencies, assets, and app version
-- `/home/runner/work/birdnet-live-app/birdnet-live-app/lib/main.dart`:
+- `lib/main.dart`:
   startup logic and dependency initialization
-- `/home/runner/work/birdnet-live-app/birdnet-live-app/lib/app.dart`:
+- `lib/app.dart`:
   root `MaterialApp`, theme, localization, and first screen selection
-- `/home/runner/work/birdnet-live-app/birdnet-live-app/lib/`:
+- `lib/`:
   almost all application logic and UI
 
 ### How Flutter apps are usually structured
@@ -61,16 +61,16 @@ that for images, model files, and species metadata.
 
 Important examples:
 
-- `/home/runner/work/birdnet-live-app/birdnet-live-app/assets/images/`
-- `/home/runner/work/birdnet-live-app/birdnet-live-app/assets/models/`
-- `/home/runner/work/birdnet-live-app/birdnet-live-app/assets/species_data/`
+- `assets/images/`
+- `assets/models/`
+- `assets/species_data/`
 
 ### Localization basics
 
 User-facing strings should not be hardcoded in widgets. This repository keeps
 them in ARB files under:
 
-- `/home/runner/work/birdnet-live-app/birdnet-live-app/lib/l10n/`
+- `lib/l10n/`
 
 If you change text shown in the app, this is one of the first places to check.
 
@@ -79,7 +79,6 @@ If you change text shown in the app, this is one of the first places to check.
 Common commands:
 
 ```bash
-cd /home/runner/work/birdnet-live-app/birdnet-live-app
 flutter pub get
 flutter analyze
 flutter test
@@ -112,73 +111,73 @@ also means there is more to understand than in a typical beginner Flutter app.
 
 ### Core project files
 
-- `/home/runner/work/birdnet-live-app/birdnet-live-app/pubspec.yaml`:
+- `pubspec.yaml`:
   dependencies, assets, version
-- `/home/runner/work/birdnet-live-app/birdnet-live-app/analysis_options.yaml`:
+- `analysis_options.yaml`:
   analyzer and lint rules
-- `/home/runner/work/birdnet-live-app/birdnet-live-app/mkdocs.yml`:
+- `mkdocs.yml`:
   documentation site configuration
-- `/home/runner/work/birdnet-live-app/birdnet-live-app/README.md`:
+- `README.md`:
   project overview and common commands
 
 ### Application code
 
-- `/home/runner/work/birdnet-live-app/birdnet-live-app/lib/core/`:
+- `lib/core/`:
   app-wide constants, theme, and foundational utilities
-- `/home/runner/work/birdnet-live-app/birdnet-live-app/lib/shared/`:
+- `lib/shared/`:
   shared models, services, providers, and reusable widgets
-- `/home/runner/work/birdnet-live-app/birdnet-live-app/lib/features/`:
+- `lib/features/`:
   feature-oriented modules
 
 ### Feature modules
 
-- `/home/runner/work/birdnet-live-app/birdnet-live-app/lib/features/live/`:
+- `lib/features/live/`:
   live identification mode
-- `/home/runner/work/birdnet-live-app/birdnet-live-app/lib/features/point_count/`:
+- `lib/features/point_count/`:
   timed survey sessions
-- `/home/runner/work/birdnet-live-app/birdnet-live-app/lib/features/survey/`:
+- `lib/features/survey/`:
   long-running GPS survey workflow
-- `/home/runner/work/birdnet-live-app/birdnet-live-app/lib/features/file_analysis/`:
+- `lib/features/file_analysis/`:
   offline audio file analysis
-- `/home/runner/work/birdnet-live-app/birdnet-live-app/lib/features/explore/`:
+- `lib/features/explore/`:
   location-based species exploration
-- `/home/runner/work/birdnet-live-app/birdnet-live-app/lib/features/inference/`:
+- `lib/features/inference/`:
   ONNX model loading and prediction
-- `/home/runner/work/birdnet-live-app/birdnet-live-app/lib/features/audio/`:
+- `lib/features/audio/`:
   audio capture and buffering
-- `/home/runner/work/birdnet-live-app/birdnet-live-app/lib/features/history/`:
+- `lib/features/history/`:
   saved sessions, review, and export
-- `/home/runner/work/birdnet-live-app/birdnet-live-app/lib/features/settings/`:
+- `lib/features/settings/`:
   settings UI and settings-related logic
-- `/home/runner/work/birdnet-live-app/birdnet-live-app/lib/features/home/`:
+- `lib/features/home/`:
   main menu and entry screens
-- `/home/runner/work/birdnet-live-app/birdnet-live-app/lib/features/onboarding/`:
+- `lib/features/onboarding/`:
   initial onboarding and terms flow
-- `/home/runner/work/birdnet-live-app/birdnet-live-app/lib/features/about/`:
+- `lib/features/about/`:
   credits, links, and legal information
 
 ### Platform folders
 
-- `/home/runner/work/birdnet-live-app/birdnet-live-app/android/`
-- `/home/runner/work/birdnet-live-app/birdnet-live-app/ios/`
+- `android/`
+- `ios/`
 
 You usually touch these when changing package identifiers, app names, signing,
 permissions, or platform-specific plugins.
 
 ### Tests and docs
 
-- `/home/runner/work/birdnet-live-app/birdnet-live-app/test/`: unit tests
-- `/home/runner/work/birdnet-live-app/birdnet-live-app/integration_test/`:
+- `test/`: unit tests
+- `integration_test/`:
   integration tests
-- `/home/runner/work/birdnet-live-app/birdnet-live-app/docs/`: user and
+- `docs/`: user and
   developer documentation
 
 ## 4. How the App Starts
 
 The startup path is short and worth understanding early:
 
-1. `/home/runner/work/birdnet-live-app/birdnet-live-app/lib/main.dart`
-2. `/home/runner/work/birdnet-live-app/birdnet-live-app/lib/app.dart`
+1. `lib/main.dart`
+2. `lib/app.dart`
 3. onboarding gate or home screen
 
 At startup, the app initializes:
@@ -212,14 +211,14 @@ layout is one of the biggest strengths of the project.
 If your new app is not about bird audio identification, these parts are the
 most BirdNET-specific:
 
-- `/home/runner/work/birdnet-live-app/birdnet-live-app/assets/models/`
-- `/home/runner/work/birdnet-live-app/birdnet-live-app/assets/species_data/`
-- `/home/runner/work/birdnet-live-app/birdnet-live-app/lib/features/inference/`
-- `/home/runner/work/birdnet-live-app/birdnet-live-app/lib/features/audio/`
-- `/home/runner/work/birdnet-live-app/birdnet-live-app/lib/features/explore/`
-- `/home/runner/work/birdnet-live-app/birdnet-live-app/lib/features/live/`
-- `/home/runner/work/birdnet-live-app/birdnet-live-app/lib/features/point_count/`
-- `/home/runner/work/birdnet-live-app/birdnet-live-app/lib/features/survey/`
+- `assets/models/`
+- `assets/species_data/`
+- `lib/features/inference/`
+- `lib/features/audio/`
+- `lib/features/explore/`
+- `lib/features/live/`
+- `lib/features/point_count/`
+- `lib/features/survey/`
 
 If your new app still uses live sensor input, offline inference, or field
 sessions, large parts of the architecture may still be reusable.
@@ -248,10 +247,10 @@ If you want to fork this into a different product, the safest first changes are:
 
 Important places for app identity changes:
 
-- `/home/runner/work/birdnet-live-app/birdnet-live-app/pubspec.yaml`
-- `/home/runner/work/birdnet-live-app/birdnet-live-app/android/app/build.gradle`
-- `/home/runner/work/birdnet-live-app/birdnet-live-app/android/app/src/main/AndroidManifest.xml`
-- `/home/runner/work/birdnet-live-app/birdnet-live-app/ios/Runner/Info.plist`
+- `pubspec.yaml`
+- `android/app/build.gradle`
+- `android/app/src/main/AndroidManifest.xml`
+- `ios/Runner/Info.plist`
 
 ## 9. A Practical Way To Learn This Codebase
 
@@ -259,10 +258,10 @@ If you are new to Flutter, do not try to understand everything at once.
 
 A good order is:
 
-1. read `/home/runner/work/birdnet-live-app/birdnet-live-app/README.md`
-2. read `/home/runner/work/birdnet-live-app/birdnet-live-app/lib/main.dart`
-3. read `/home/runner/work/birdnet-live-app/birdnet-live-app/lib/app.dart`
-4. inspect `/home/runner/work/birdnet-live-app/birdnet-live-app/lib/features/home/`
+1. read `README.md`
+2. read `lib/main.dart`
+3. read `lib/app.dart`
+4. inspect `lib/features/home/`
 5. inspect one feature you care about most
 6. only then move into providers, services, and platform folders
 
