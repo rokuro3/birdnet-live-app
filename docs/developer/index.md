@@ -44,8 +44,8 @@ See the [Developer Getting Started](getting-started.md) guide for environment se
 
 ## Key Topics
 
-- [Adapting This App](adapting-this-app.md) — Flutter basics and a repository
-  map for turning BirdNET Live into a different app
+- [Adapting This App（日本語）](adapting-this-app.md) — Flutter の基本と、
+  BirdNET Live を別アプリへ作り替えるためのリポジトリ概要
 - [Architecture](architecture.md) — Feature-based architecture and patterns
 - [State Management](state-management.md) — Riverpod providers and notifiers
 - [Audio Pipeline](audio-pipeline.md) — Capture, ring buffer, and processing

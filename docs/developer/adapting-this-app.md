@@ -1,82 +1,81 @@
-# Adapting BirdNET Live Into Another Flutter App
+# BirdNET Live を別の Flutter アプリに作り替えるためのガイド
 
-This note is for a developer who is new to Flutter and wants to turn BirdNET
-Live into a different app rather than only making small changes.
+このメモは、Flutter が初めてで、BirdNET Live を少し直すのではなく、
+別のアプリの土台として使いたい人向けの概要です。
 
-## 1. Flutter Basics You Need First
+## 1. まず押さえたい Flutter の基本
 
-### Flutter in one sentence
+### Flutter を一言でいうと
 
-Flutter is a UI framework where you build screens by composing widgets in Dart.
-The same codebase can target Android, iOS, and desktop platforms.
+Flutter は、Dart でウィジェットを組み合わせながら画面を作る UI
+フレームワークです。1 つのコードベースから Android、iOS、デスクトップ
+向けのアプリを作れます。
 
-### The files that matter most at the start
+### 最初に見るとよいファイル
 
 - `pubspec.yaml`:
-  package metadata, dependencies, assets, and app version
+  パッケージ情報、依存関係、アセット、アプリのバージョン
 - `lib/main.dart`:
-  startup logic and dependency initialization
+  起動時の初期化処理
 - `lib/app.dart`:
-  root `MaterialApp`, theme, localization, and first screen selection
+  `MaterialApp`、テーマ、ローカライズ、最初に開く画面
 - `lib/`:
-  almost all application logic and UI
+  アプリ本体の UI とロジックのほぼすべて
 
-### How Flutter apps are usually structured
+### Flutter アプリの基本的な流れ
 
-- `main()` boots the app
-- `runApp()` mounts the root widget
-- Widgets describe the UI
-- State drives what the UI shows
-- Rebuilding widgets is normal and expected
+- `main()` でアプリを起動する
+- `runApp()` でルートウィジェットを載せる
+- ウィジェットが UI を表す
+- 状態が変わると UI も変わる
+- 再ビルドは普通の動作
 
-In this repository, `main()` initializes platform services first, then starts a
-Riverpod `ProviderScope`, and finally loads `App`.
+このリポジトリでは、`main()` でプラットフォーム向けの初期化をしたあと、
+Riverpod の `ProviderScope` を立ち上げ、最後に `App` を読み込みます。
 
-### Widget basics
+### ウィジェットの基本
 
-- **StatelessWidget**: UI from fixed input
-- **StatefulWidget**: UI with local mutable state
-- **ConsumerWidget**: Riverpod-aware widget that reads providers
+- **StatelessWidget**: 入力が決まれば表示も決まる
+- **StatefulWidget**: ローカルな可変状態を持てる
+- **ConsumerWidget**: Riverpod の provider を読める
 
-This app uses `ConsumerWidget` heavily because Riverpod is the main state
-management approach.
+このアプリでは Riverpod を中心に状態管理しているので、
+`ConsumerWidget` が多く使われています。
 
-### State management basics
+### 状態管理の基本
 
-BirdNET Live uses **Riverpod**.
+BirdNET Live は **Riverpod** を使っています。
 
-The common pattern is:
+よくある流れは次のとおりです。
 
-1. Define a provider for a value or service
-2. Read it in a widget with `ref.watch(...)`
-3. Update it through a notifier or service
+1. 値やサービスの provider を定義する
+2. ウィジェット側で `ref.watch(...)` で読む
+3. notifier やサービス経由で更新する
 
-That means when you want to change app behavior, you often need to inspect both
-the screen widget and the provider behind it.
+つまり、アプリの挙動を変えたいときは、画面側のコードだけでなく、
+その背後にある provider も一緒に見ることが多いです。
 
-### Assets and configuration
+### アセットと設定
 
-Flutter apps often declare static assets in `pubspec.yaml`. This project uses
-that for images, model files, and species metadata.
+Flutter では `pubspec.yaml` に静的アセットを宣言します。
+このプロジェクトでは画像、モデルファイル、種データなどをここで扱っています。
 
-Important examples:
+主な例:
 
 - `assets/images/`
 - `assets/models/`
 - `assets/species_data/`
 
-### Localization basics
+### ローカライズの基本
 
-User-facing strings should not be hardcoded in widgets. This repository keeps
-them in ARB files under:
+画面に出す文字列は、ウィジェットへ直接書かないのが基本です。
+このリポジトリでは次の ARB ファイル群で管理しています。
 
 - `lib/l10n/`
 
-If you change text shown in the app, this is one of the first places to check.
+表示テキストを変えたいときは、ここを最初に確認すると把握しやすいです。
 
-### Build and iteration basics
-
-Common commands:
+### 開発時によく使うコマンド
 
 ```bash
 flutter pub get
@@ -85,131 +84,127 @@ flutter test
 flutter run
 ```
 
-- **Hot reload** updates code without restarting the whole app
-- **Hot restart** restarts Dart state but is still faster than a full rebuild
-- **flutter analyze** is the basic static check you should run often
+- **Hot reload**: 状態をなるべく維持したまま変更を反映する
+- **Hot restart**: Dart 側の状態を立ち上げ直す
+- **flutter analyze**: まず最初に回したい静的チェック
 
-## 2. What This Repository Is
+## 2. このリポジトリは何をするものか
 
-BirdNET Live is a Flutter app for real-time bird species identification using
-on-device ONNX inference. The app listens to microphone audio, runs a model
-locally, and shows detections together with a live spectrogram and survey tools.
+BirdNET Live は、端末上で ONNX 推論を動かし、鳥の音声をリアルタイムに
+識別する Flutter アプリです。マイク入力を取り込み、ローカルでモデルを実行し、
+検出結果をライブスペクトログラムや調査向けの機能と一緒に表示します。
 
-This is not a small demo app. It already contains:
+小さなサンプルアプリではなく、すでに次のような要素を持っています。
 
-- real-time audio capture
-- on-device model inference
-- GPS-based workflows
-- session persistence and export
-- localization
-- multiple operating modes
+- リアルタイム音声入力
+- オンデバイス推論
+- GPS を使ったワークフロー
+- セッション保存とエクスポート
+- ローカライズ
+- 複数の動作モード
 
-That makes it a strong base if you want to build a different field app, but it
-also means there is more to understand than in a typical beginner Flutter app.
+別アプリの土台として見ると強力ですが、そのぶん学ぶ範囲は広めです。
 
-## 3. High-Level Repository Map
+## 3. リポジトリ全体の見取り図
 
-### Core project files
+### 重要なルートファイル
 
 - `pubspec.yaml`:
-  dependencies, assets, version
+  依存関係、アセット、バージョン
 - `analysis_options.yaml`:
-  analyzer and lint rules
+  Analyzer と lint の設定
 - `mkdocs.yml`:
-  documentation site configuration
+  ドキュメントサイトの設定
 - `README.md`:
-  project overview and common commands
+  プロジェクト概要と基本コマンド
 
-### Application code
+### アプリ本体
 
 - `lib/core/`:
-  app-wide constants, theme, and foundational utilities
+  定数、テーマ、基盤ユーティリティ
 - `lib/shared/`:
-  shared models, services, providers, and reusable widgets
+  共通モデル、サービス、provider、再利用ウィジェット
 - `lib/features/`:
-  feature-oriented modules
+  機能ごとのモジュール
 
-### Feature modules
+### 主な feature モジュール
 
 - `lib/features/live/`:
-  live identification mode
+  ライブ識別モード
 - `lib/features/point_count/`:
-  timed survey sessions
+  時間制限付きの定点観測
 - `lib/features/survey/`:
-  long-running GPS survey workflow
+  GPS を使う長時間の調査モード
 - `lib/features/file_analysis/`:
-  offline audio file analysis
+  音声ファイルのオフライン解析
 - `lib/features/explore/`:
-  location-based species exploration
+  位置情報ベースの種の探索
 - `lib/features/inference/`:
-  ONNX model loading and prediction
+  ONNX モデルの読み込みと推論
 - `lib/features/audio/`:
-  audio capture and buffering
+  音声入力とバッファ処理
 - `lib/features/history/`:
-  saved sessions, review, and export
+  セッション保存、レビュー、エクスポート
 - `lib/features/settings/`:
-  settings UI and settings-related logic
+  設定画面と設定関連ロジック
 - `lib/features/home/`:
-  main menu and entry screens
+  ホーム画面と入口になる画面群
 - `lib/features/onboarding/`:
-  initial onboarding and terms flow
+  初回オンボーディングと利用規約フロー
 - `lib/features/about/`:
-  credits, links, and legal information
+  クレジット、リンク、法的情報
 
-### Platform folders
+### プラットフォーム別ディレクトリ
 
 - `android/`
 - `ios/`
 
-You usually touch these when changing package identifiers, app names, signing,
-permissions, or platform-specific plugins.
+アプリ名、パッケージ ID、権限、署名、プラグイン連携などを変えるときは、
+このあたりも触ることになります。
 
-### Tests and docs
+### テストとドキュメント
 
-- `test/`: unit tests
-- `integration_test/`:
-  integration tests
-- `docs/`: user and
-  developer documentation
+- `test/`: 単体テスト
+- `integration_test/`: 結合テスト
+- `docs/`: ユーザー向け・開発者向けドキュメント
 
-## 4. How the App Starts
+## 4. アプリの起動順
 
-The startup path is short and worth understanding early:
+起動まわりは短いので、最初に理解しておくと楽です。
 
 1. `lib/main.dart`
 2. `lib/app.dart`
-3. onboarding gate or home screen
+3. オンボーディングまたはホーム画面
 
-At startup, the app initializes:
+起動時には次のような初期化が行われます。
 
-- foreground task communication
-- survey notifications
-- system UI behavior
+- フォアグラウンドタスク通信用の初期化
+- Survey 用通知機能の初期化
+- システム UI の設定
 - `SharedPreferences`
-- Riverpod providers
+- Riverpod provider 群
 
-Then `App` builds `MaterialApp`, sets the theme and localization, and chooses
-either onboarding or the home screen.
+その後 `App` が `MaterialApp` を組み立て、テーマとローカライズを設定し、
+オンボーディング画面かホーム画面へ進みます。
 
-## 5. The Main Architectural Idea
+## 5. このアプリの設計上の大きな特徴
 
-This repository uses **feature-based organization** instead of putting all
-screens in one folder and all services in another.
+このリポジトリは、画面ごと・サービスごとに分けるよりも、
+**feature 単位**で整理されています。
 
-That is useful when adapting the app because you can think in larger chunks:
+これは別アプリに作り替えるときに便利です。機能を大きな単位で見られるので、
+次のように考えやすくなります。
 
-- remove a feature
-- rename a feature
-- replace the internals of a feature
-- keep shared infrastructure while swapping app-specific workflows
+- ある feature を丸ごと外す
+- ある feature の名前や役割を変える
+- feature の内部実装だけ差し替える
+- 共通基盤を残しつつ、業務ロジックだけ入れ替える
 
-If you want to build a different app from this codebase, this feature-based
-layout is one of the biggest strengths of the project.
+別アプリ化を考えると、この feature ベースの構成はかなり扱いやすいです。
 
-## 6. What Is Specific to BirdNET Live
+## 6. BirdNET Live 固有の部分
 
-If your new app is not about bird audio identification, these parts are the
-most BirdNET-specific:
+もし新しいアプリが鳥の音声識別ではないなら、次の領域は特に BirdNET 色が強いです。
 
 - `assets/models/`
 - `assets/species_data/`
@@ -220,65 +215,63 @@ most BirdNET-specific:
 - `lib/features/point_count/`
 - `lib/features/survey/`
 
-If your new app still uses live sensor input, offline inference, or field
-sessions, large parts of the architecture may still be reusable.
+ただし、新しいアプリでもセンサー入力、オフライン推論、現地調査、
+セッション記録のような考え方を使うなら、構造自体はかなり流用できます。
 
-## 7. What Is Generic and Reusable
+## 7. 比較的流用しやすい部分
 
-These parts are easier to keep even if the app idea changes:
+アプリの題材が変わっても、次は残しやすいです。
 
-- app bootstrapping with Flutter and Riverpod
-- theming and localization setup
-- settings persistence through `SharedPreferences`
-- feature-based folder structure
-- session/history concepts
-- export workflows
-- documentation setup with MkDocs
+- Flutter + Riverpod の起動・依存解決部分
+- テーマとローカライズの枠組み
+- `SharedPreferences` を使った設定保存
+- feature ベースのディレクトリ構成
+- 履歴・セッション管理の考え方
+- エクスポートの仕組み
+- MkDocs によるドキュメント構成
 
-## 8. Good First Changes When Turning This Into Another App
+## 8. 別アプリ化するときの最初の一歩
 
-If you want to fork this into a different product, the safest first changes are:
+別プロダクトとして作り替えるなら、最初は次の順で考えるのが安全です。
 
-1. change branding and app identity
-2. decide which existing features stay and which are removed
-3. replace the home screen so the app structure reflects the new goal
-4. rename or remove BirdNET-specific models and content
-5. update settings and localization keys to match the new domain
+1. ブランド名とアプリの識別子を変える
+2. 残す機能と消す機能を決める
+3. ホーム画面を新しい目的に合わせて作り替える
+4. BirdNET 固有のモデルやデータを差し替える
+5. 設定項目や文言を新しいドメインに合わせる
 
-Important places for app identity changes:
+アプリの識別情報を変えるときに重要な場所:
 
 - `pubspec.yaml`
 - `android/app/build.gradle`
 - `android/app/src/main/AndroidManifest.xml`
 - `ios/Runner/Info.plist`
 
-## 9. A Practical Way To Learn This Codebase
+## 9. このコードベースの学び方
 
-If you are new to Flutter, do not try to understand everything at once.
+Flutter が初めてなら、最初から全部を追わないほうが理解しやすいです。
 
-A good order is:
+おすすめの順番は次のとおりです。
 
-1. read `README.md`
-2. read `lib/main.dart`
-3. read `lib/app.dart`
-4. inspect `lib/features/home/`
-5. inspect one feature you care about most
-6. only then move into providers, services, and platform folders
+1. `README.md` を読む
+2. `lib/main.dart` を読む
+3. `lib/app.dart` を読む
+4. `lib/features/home/` を見る
+5. いちばん興味のある feature を 1 つ追う
+6. そのあとで provider、service、platform 固有コードへ進む
 
-That keeps the learning path manageable.
+この順番なら、把握する範囲を少しずつ広げられます。
 
-## 10. Summary
+## 10. まとめ
 
-BirdNET Live is definitely a Flutter app, and it is organized in a fairly clean
-way for reuse:
+BirdNET Live は間違いなく Flutter アプリで、再利用しやすい形にもなっています。
 
-- Flutter handles the cross-platform UI layer
-- Riverpod handles state and dependency wiring
-- `lib/features/` holds the business features
-- `lib/shared/` and `lib/core/` hold reusable infrastructure
-- BirdNET-specific model and domain logic are concentrated in a few areas
+- Flutter がクロスプラットフォーム UI を担当する
+- Riverpod が状態管理と依存の配線を担う
+- `lib/features/` に業務機能がまとまっている
+- `lib/shared/` と `lib/core/` に共通基盤が集まっている
+- BirdNET 固有のモデル・音声・調査ロジックは比較的まとまっている
 
-So if your goal is to turn this into another app, the repository is a workable
-starting point. The easiest strategy is to preserve the app shell and shared
-infrastructure while gradually replacing BirdNET-specific features with your own
-domain logic.
+そのため、別アプリに変えていくときは、アプリの土台と共通基盤を活かしつつ、
+BirdNET 固有の feature を段階的に自分のアプリ向けへ置き換えていくやり方が
+取りやすいです。
