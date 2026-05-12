@@ -291,6 +291,7 @@ nav:
 - Developer Guide:
   - Overview: developer/index.md
   - Getting Started: developer/getting-started.md
+  - Adapting This App: developer/adapting-this-app.md
   - Architecture: developer/architecture.md
   - Building: developer/building.md
   - Testing: developer/testing.md
